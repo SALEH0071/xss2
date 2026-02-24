@@ -2,29 +2,46 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XSS Demo - تجربة تعليمية</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 2px solid #ddd; border-radius: 5px; }
+        button { background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .result { margin-top: 20px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; }
+    </style>
 </head>
 <body>
-    <h1>hello xss (: </h1>
-    
-    <form method="GET" action="">
-        <label>ابحث هنا:</label>
-        <input type="text" name="q" placeholder="salehx007">
-        <button type="submit">search</button>
-    </form>
+    <div class="container">
+        <h1>⚠️ موقع XSS التعليمي (Reflected XSS Demo)</h1>
+        
+        <form id="searchForm">
+            <label>ابحث هنا:</label>
+            <input type="text" id="searchInput" placeholder="اكتب كلمة بحث">
+            <button type="submit">بحث</button>
+        </form>
 
-    <?php
-    if (isset($_GET['q'])) {
-      
-        echo "<h3>result:</h3>";
-        echo "<div style='border:1px solid red; padding:10px;'>";
-        echo $_GET['q'];  // 
-        echo "</div>";
-    }
-    ?>
+        <div id="result" class="result" style="display:none;">
+            <h3>نتيجة البحث:</h3>
+            <div id="output"></div>
+        </div>
 
-    <hr>
-    <p>🔴 <strong>للتجربة:</strong> hello:</p>
-    <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>
+        <hr>
+        <p>🔴 <strong>للتجربة:</strong> اكتب في حقل البحث:</p>
+        <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code><br>
+        <code>&lt;img src=x onerror=alert("XSS")&gt;</code>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('searchInput').value;
+            
+            // ⚠️ خطير: عرض الإدخال مباشرة بدون تنقية (ثغرة XSS)
+            document.getElementById('output').innerHTML = input;
+            document.getElementById('result').style.display = 'block';
+        });
+    </script>
 </body>
 </html>
